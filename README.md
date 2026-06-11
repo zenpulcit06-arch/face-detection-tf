@@ -11,8 +11,8 @@
 | Phase | Topic | Status |
 |-------|-------|--------|
 | 01 | TensorFlow Basics — Tensors, Ops, Gradients | ✅ Done |
-| 02 | First Neural Net — MNIST Digit Classifier | 🔄 In Progress |
-| 03 | Convolutional Neural Networks (CNN) | ⏳ Upcoming |
+| 02 | First Neural Net — MNIST Digit Classifier | ✅ Done |
+| 03 | Convolutional Neural Networks (CNN) | 🔄 In Progress |
 | 04 | Face Detection — Pre-trained model (fast win) | ⏳ Upcoming |
 | 05 | Face Detection — Train our own CNN | ⏳ Upcoming |
 
@@ -95,6 +95,16 @@ face-detection-tf/
 **Loss for classification:** `sparse_categorical_crossentropy` — use when labels are integers (0, 1, 2...). `categorical_crossentropy` — use when labels are one-hot vectors.
 
 **Overfitting signal:** Training accuracy much higher than validation accuracy. The model memorized the training data instead of learning general patterns.
+
+**Convolution:** Slide a small filter (e.g. 3×3) across an image. At each position, compute a dot product between the filter and the image patch. Output is a feature map — highlights where the filter pattern was found.
+
+**Feature map:** The output of one filter applied to the whole image. 32 filters → 32 feature maps.
+
+**MaxPooling:** Take max value in each 2×2 patch. Halves spatial dimensions. Reduces computation and adds slight position invariance.
+
+**Dropout:** Randomly zero out neurons during training. Prevents overfitting by forcing the network to not rely on any single neuron.
+
+**Parameter sharing:** One filter scans the entire image — only 9 weights for a 3×3 filter, regardless of image size. Dense layer would need one weight per pixel pair.
 
 ---
 

@@ -116,3 +116,46 @@ Example: `Dense(128)` after input of 784:
 - Understood why activations are necessary
 - Learned softmax, cross-entropy loss, model.summary()
 - Saw training curves — train vs validation accuracy
+
+## Convolutional Layers
+
+| Concept | Keras |
+|---------|-------|
+| Convolution | `Conv2D(filters, kernel_size)` |
+| Feature map | output of one Conv2D filter |
+| MaxPool | `MaxPooling2D(pool_size=2)` |
+| Dropout | `Dropout(rate=0.5)` |
+
+## Conv2D Parameter Count
+
+```
+params = (kernel_h x kernel_w x in_channels + 1) x out_filters
+Conv2D(32, 3) on grayscale  = (3x3x1 + 1) x 32  = 320
+Conv2D(64, 3) after 32 maps = (3x3x32 + 1) x 64 = 18,496
+```
+
+## Spatial Dimensions Through a CNN
+
+```
+Input:              (28, 28,  1)
+Conv2D(32, 3) same: (28, 28, 32)
+MaxPool(2):         (14, 14, 32)
+Conv2D(64, 3) same: (14, 14, 64)
+MaxPool(2):         (7,   7, 64)
+Flatten:            (3136,)       <- 7 x 7 x 64
+```
+
+## Dense vs CNN Parameter Comparison
+
+| Task | Dense params | CNN params |
+|------|-------------|------------|
+| 32 filters on 28x28 grayscale | 784 x 32 = 25,088 | (3x3+1) x 32 = 320 |
+
+One filter is shared across the whole image — that is parameter sharing.
+
+## Session 3 Learning Log
+- Ran hand-crafted vertical and horizontal edge filters manually
+- Saw what feature maps look like on a real image
+- Built CNN — higher accuracy than Dense with fewer conv parameters
+- Visualized 32 learned filters after training
+- Key insight: early layers learn edges, deep layers learn complex patterns
