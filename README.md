@@ -12,8 +12,9 @@
 |-------|-------|--------|
 | 01 | TensorFlow Basics — Tensors, Ops, Gradients | ✅ Done |
 | 02 | First Neural Net — MNIST Digit Classifier | ✅ Done |
-| 03 | Convolutional Neural Networks (CNN) | 🔄 In Progress |
-| 04 | Face Detection — Pre-trained model (fast win) | ⏳ Upcoming |
+| 03 | Convolutional Neural Networks (CNN) | ✅ Done |
+| 04 | Face Detection — Pre-trained model (fast win) | 🔄 In Progress |
+
 | 05 | Face Detection — Train our own CNN | ⏳ Upcoming |
 
 ---
@@ -76,6 +77,8 @@ face-detection-tf/
 - [x] Building a model with `tf.keras` — Sequential, Dense, compile, fit
 - [x] What softmax does and why it's used for classification output
 - [ ] What convolutions actually do to an image
+- [x] Pre-trained face detection with Haar Cascade and deep learning
+- [x] Bounding boxes, confidence scores, BGR vs RGB
 - [ ] Training a face detector end-to-end
 
 ---
@@ -109,3 +112,12 @@ face-detection-tf/
 ---
 
 *Project started: 2025 | Built to learn, not just to ship.*
+**Bounding box:** 4 numbers describing where a face is. Either (x, y, width, height) or (x1, y1, x2, y2) — two corners. Our detector will predict these.
+
+**Confidence score:** The sigmoid output of the network — probability this region contains a face. Threshold at 0.5: above = face, below = not face.
+
+**Haar Cascade:** Classical (pre-deep learning) face detector. Fast, hand-crafted features, works best on frontal well-lit faces. Included in OpenCV.
+
+**BGR vs RGB:** OpenCV loads images in BGR order. Always convert with cv2.cvtColor before displaying in matplotlib or feeding to a TF model.
+
+**Mean subtraction:** Subtract the average pixel value of the training set from each image before feeding to the network. Centers the data around zero — helps training converge faster.

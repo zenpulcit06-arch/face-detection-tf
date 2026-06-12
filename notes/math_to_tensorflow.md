@@ -159,3 +159,51 @@ One filter is shared across the whole image — that is parameter sharing.
 - Built CNN — higher accuracy than Dense with fewer conv parameters
 - Visualized 32 learned filters after training
 - Key insight: early layers learn edges, deep layers learn complex patterns
+
+## Face Detection Concepts
+
+| Term | Meaning |
+|------|---------|
+| Bounding box | (x, y, w, h) or (x1, y1, x2, y2) — where the face is |
+| Confidence score | Sigmoid output = probability region is a face |
+| IOU | Intersection over Union — measures how well two boxes overlap |
+| Threshold | If confidence > 0.5 → face. Tune this to trade precision vs recall |
+
+## Bounding Box Formats
+
+```
+Format 1: (x, y, w, h)       <- OpenCV Haar style
+  x, y = top-left corner
+  w, h = width and height
+
+Format 2: (x1, y1, x2, y2)   <- Deep learning style
+  x1, y1 = top-left corner
+  x2, y2 = bottom-right corner
+
+Convert: x2 = x1 + w,  y2 = y1 + h
+```
+
+## Preprocessing for Deep Learning Detectors
+
+```python
+# 1. Resize to fixed size the model expects
+img = cv2.resize(img, (300, 300))
+
+# 2. Subtract training mean (centers data around 0)
+img = img - [104.0, 177.0, 123.0]   # mean BGR of training set
+
+# 3. Add batch dimension
+blob = img[np.newaxis, ...]          # (1, 300, 300, 3)
+```
+
+## Why Fixed Input Size?
+Dense layers have fixed weight matrices — they cannot accept variable input sizes.
+Every image must be resized to the same shape the model was trained on.
+CNNs with only conv+pool layers CAN accept variable sizes — Dense layers cannot.
+
+## Session 4 Learning Log
+- Ran Haar Cascade detector — understood scaleFactor and minNeighbors
+- Ran deep learning detector — saw confidence scores on bounding boxes
+- Understood BGR vs RGB — common OpenCV bug to watch for
+- Understood why mean subtraction helps training
+- Key difference: Haar = hand-crafted rules, CNN = learned from data
