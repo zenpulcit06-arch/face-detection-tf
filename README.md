@@ -13,9 +13,10 @@
 | 01 | TensorFlow Basics — Tensors, Ops, Gradients | ✅ Done |
 | 02 | First Neural Net — MNIST Digit Classifier | ✅ Done |
 | 03 | Convolutional Neural Networks (CNN) | ✅ Done |
-| 04 | Face Detection — Pre-trained model (fast win) | 🔄 In Progress |
+| 04 | Face Detection — Pre-trained model (fast win) | ✅ Done |
+| 05 | Face Detection — Train our own CNN | ✅ Done |
 
-| 05 | Face Detection — Train our own CNN | ⏳ Upcoming |
+
 
 ---
 
@@ -79,7 +80,11 @@ face-detection-tf/
 - [ ] What convolutions actually do to an image
 - [x] Pre-trained face detection with Haar Cascade and deep learning
 - [x] Bounding boxes, confidence scores, BGR vs RGB
-- [ ] Training a face detector end-to-end
+- [x] Training a face detector end-to-end
+- [x] Real dataset pipeline with tf.data
+- [x] Class imbalance — detection and fixing
+- [x] Functional API for multi-output models
+- [x] End-to-end: raw image → trained model → real prediction
 
 ---
 
@@ -121,3 +126,15 @@ face-detection-tf/
 **BGR vs RGB:** OpenCV loads images in BGR order. Always convert with cv2.cvtColor before displaying in matplotlib or feeding to a TF model.
 
 **Mean subtraction:** Subtract the average pixel value of the training set from each image before feeding to the network. Centers the data around zero — helps training converge faster.
+**Class imbalance:** When one class has far more samples than another. Model learns to always predict the majority class. Fix: undersample the majority, or use class weights.
+
+**Shuffle buffer:** `dataset.shuffle(buffer_size)` loads N samples into memory and shuffles those. Buffer must equal full dataset size for a truly random shuffle. Too small = data stays partially ordered.
+
+**tf.data pipeline order:**
+```
+load → preprocess (resize, normalize, label) → concatenate → shuffle → split → batch → prefetch
+```
+
+**Functional API:** Unlike Sequential, allows multiple output heads from one shared backbone. Define inputs explicitly, call each layer as a function, specify outputs in `tf.keras.Model(inputs, outputs)`.
+
+**Always check test set label distribution** before trusting accuracy. 100% accuracy on an imbalanced test set means the model predicts one class for everything.

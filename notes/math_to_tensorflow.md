@@ -207,3 +207,55 @@ CNNs with only conv+pool layers CAN accept variable sizes — Dense layers canno
 - Understood BGR vs RGB — common OpenCV bug to watch for
 - Understood why mean subtraction helps training
 - Key difference: Haar = hand-crafted rules, CNN = learned from data
+
+## tf.data Pipeline
+
+```python
+dataset = tfds.load("name", split='train')          # load
+dataset = dataset.map(preprocess_fn)                 # transform every sample
+dataset = dataset.shuffle(buffer_size=N)             # shuffle (N = full dataset size)
+train, test = tf.keras.utils.split_dataset(d, 0.8)  # split
+dataset = dataset.batch(64)                          # group into batches
+dataset = dataset.prefetch(tf.data.AUTOTUNE)         # load next batch in background
+```
+
+## Class Imbalance
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| More no-face than face | Model always predicts no-face | Undersample majority with .take(N) |
+| Imbalanced test set | 100% accuracy (fake) | Shuffle with large buffer, check counts |
+
+## Functional API vs Sequential
+
+```python
+# Sequential — one path only
+model = tf.keras.Sequential([LayerA(), LayerB()])
+
+# Functional — explicit flow, allows branching
+inputs = tf.keras.Input(shape=(...))
+x = LayerA()(inputs)
+x = LayerB()(x)
+out1 = LayerC()(x)   # branch 1
+out2 = LayerD()(x)   # branch 2
+model = tf.keras.Model(inputs=inputs, outputs=[out1, out2])
+```
+
+## Bugs Log — Things That Went Wrong and Why
+
+| Bug | Root cause | Fix |
+|-----|-----------|-----|
+| 100% val accuracy | All one class in test set | buffer_size = full dataset size |
+| Unstable loss | 13k faces vs 50k no-faces | .take(13000) on CIFAR |
+| validation_split error | Only works with numpy | validation_data=test_data |
+| Pixel values 0.000015 | map applied twice | Reload dataset, map once |
+| NameError tfds | Ran cell before imports | Always run cells in order |
+
+## Session 5 Learning Log
+- Built complete tf.data pipeline from scratch
+- Hit and fixed class imbalance bug
+- Hit and fixed shuffle buffer bug  
+- Learned Functional API for multi-output models
+- Trained face detector: 99.9% validation accuracy
+- Tested on real unseen photo: 100% confidence, correct prediction
+- Key insight: debugging data is as important as debugging the model
